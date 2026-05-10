@@ -130,22 +130,23 @@
       gap: 0;
       font-size: 1.55rem;
       font-weight: 800;
-      letter-spacing: .08em;
-      color: var(--white);
+      letter-spacing: .06em;
       flex-shrink: 0;
+      line-height: 1;
     }
     .nav-logo .logo-word {
       display: inline-flex;
       align-items: center;
-    }
-    .logo-n1, .logo-e, .logo-a, .logo-r, .logo-i { color: var(--white); }
-    .logo-x {
-      /* stylised X with aqua→blue gradient */
-      background: linear-gradient(135deg, var(--aqua) 0%, var(--blue) 100%);
+      background: linear-gradient(90deg, #1E96FC 0%, #1E96FC 28%, #95F2D9 58%, #95F2D9 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
+    }
+    .logo-x {
+      font-size: 1.35em;
       font-weight: 800;
+      line-height: .85;
+      display: inline-block;
     }
 
     /* Nav links */
@@ -722,7 +723,7 @@
         <!-- Logo -->
         <a href="#hero" class="nav-logo" aria-label="Nexari – domů">
           <span class="logo-word">
-            <span class="logo-n1">N</span><span class="logo-e">E</span><span class="logo-x">X</span><span class="logo-a">A</span><span class="logo-r">R</span><span class="logo-i">I</span>
+NE<span class="logo-x">X</span>ARI
           </span>
         </a>
 
@@ -731,7 +732,7 @@
           <li><a href="#jak-to-funguje">Jak to funguje</a></li>
           <li><a href="#pro-koho">Pro koho</a></li>
           <li class="nav-cta">
-            <a href="#reservovat-call" class="btn btn-primary">Rezervovat call</a>
+            <a href="https://cal.com/lukas-kondelik/30min" target="_blank" rel="noopener" class="btn btn-primary">Rezervovat call</a>
           </li>
         </ul>
 
@@ -745,7 +746,7 @@
       <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
         <a href="#jak-to-funguje" class="mob-link">Jak to funguje</a>
         <a href="#pro-koho" class="mob-link">Pro koho</a>
-        <a href="#reservovat-call" class="mob-cta btn btn-primary">Rezervovat call</a>
+        <a href="https://cal.com/lukas-kondelik/30min" target="_blank" rel="noopener" class="mob-cta btn btn-primary">Rezervovat call</a>
       </div>
     </div>
   </nav>
@@ -768,7 +769,7 @@
             Navrhuji a implementuji AI systémy, které automatizují rutinu a uvolní váš tým pro to, co skutečně generuje příjem.
           </p>
           <div class="hero-cta-group fade-in fade-in-delay-3">
-            <a href="#reservovat-call" class="btn btn-primary btn-cta-large">
+            <a href="https://cal.com/lukas-kondelik/30min" target="_blank" rel="noopener" class="btn btn-primary btn-cta-large">
               Rezervovat bezplatnou konzultaci
             </a>
             <p class="hero-note">
@@ -1026,7 +1027,7 @@
       </h2>
       <p class="cta-sub fade-in fade-in-delay-2">Konzultace je zdarma a bez závazků.</p>
       <div class="cta-btn-wrap fade-in fade-in-delay-3">
-        <a href="#reservovat-call" class="btn btn-primary btn-cta-large">Vybrat termín</a>
+        <a href="https://cal.com/lukas-kondelik/30min" target="_blank" rel="noopener" class="btn btn-primary btn-cta-large">Vybrat termín</a>
       </div>
     </div>
   </section>
@@ -1042,7 +1043,7 @@
           <div class="footer-logo">
             <a href="#hero" class="nav-logo" style="font-size:1.4rem;" aria-label="Nexari domů">
               <span class="logo-word">
-                <span class="logo-n1">N</span><span class="logo-e">E</span><span class="logo-x">X</span><span class="logo-a">A</span><span class="logo-r">R</span><span class="logo-i">I</span>
+    NE<span class="logo-x">X</span>ARI
               </span>
             </a>
           </div>
@@ -1126,7 +1127,7 @@
 
     fadeEls.forEach(el => observer.observe(el));
 
-    // ─── Smooth scroll for # links ───
+    // ─── Smooth scroll for internal # links only ───
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       anchor.addEventListener('click', e => {
         const target = document.querySelector(anchor.getAttribute('href'));
