@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nexari — AI Automatizace pro Obchodní Týmy</title>
+  <meta name="description" content="Navrhuji a implementuji AI systémy, které automatizují rutinu a uvolní váš tým pro to, co skutečně generuje příjem." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ─── Reset & Base ─── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: #003249;
+      color: #fff;
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    /* ─── CSS Variables ─── */
+    :root {
+      --navy:  #003249;
+      --blue:  #1E96FC;
+      --aqua:  #95F2D9;
+      --white: #ffffff;
+      --card-bg: #002538;
+      --section-alt: #002030;
+      --radius: 12px;
+      --transition: .25s ease;
+    }
+
+    /* ─── Utility ─── */
+    .container {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 28px;
+    }
+    .btn {
+      display: inline-block;
+      padding: 15px 34px;
+      border-radius: 50px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: .95rem;
+      cursor: pointer;
+      transition: filter var(--transition), box-shadow var(--transition), transform var(--transition);
+      border: none;
+      letter-spacing: .02em;
+    }
+    .btn-primary {
+      background: var(--blue);
+      color: var(--white);
+    }
+    .btn-primary:hover {
+      filter: brightness(1.12);
+      box-shadow: 0 8px 28px rgba(30,150,252,.45);
+      transform: translateY(-2px);
+    }
+    .btn-outline {
+      background: transparent;
+      color: var(--white);
+      border: 2px solid rgba(255,255,255,.35);
+    }
+    .btn-outline:hover {
+      border-color: var(--blue);
+      color: var(--blue);
+    }
+    .section-label {
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--aqua);
+      margin-bottom: 14px;
+    }
+    .section-title {
+      font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+      font-weight: 800;
+      line-height: 1.2;
+    }
+
+    /* ─── Fade-in animation ─── */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity .65s ease, transform .65s ease;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .fade-in-delay-1 { transition-delay: .1s; }
+    .fade-in-delay-2 { transition-delay: .2s; }
+    .fade-in-delay-3 { transition-delay: .3s; }
+    .fade-in-delay-4 { transition-delay: .4s; }
+
+    /* ══════════════════════════════════════
+       1. NAVIGATION
+    ══════════════════════════════════════ */
+    #navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      background: var(--navy);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      transition: background var(--transition), box-shadow var(--transition);
+    }
+    #navbar.scrolled {
+      background: rgba(0,36,56,.97);
+      box-shadow: 0 4px 24px rgba(0,0,0,.35);
+      backdrop-filter: blur(12px);
+    }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 70px;
+    }
+
+    /* Logo */
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      font-size: 1.55rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+      color: var(--white);
+      flex-shrink: 0;
+    }
+    .nav-logo .logo-word {
+      display: inline-flex;
+      align-items: center;
+    }
+    .logo-n1, .logo-e, .logo-a, .logo-r, .logo-i { color: var(--white); }
+    .logo-x {
+      /* stylised X with aqua→blue gradient */
+      background: linear-gradient(135deg, var(--aqua) 0%, var(--blue) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 800;
+    }
+
+    /* Nav links */
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: .88rem;
+      font-weight: 600;
+      color: rgba(255,255,255,.75);
+      transition: color var(--transition);
+    }
+    .nav-links a:hover { color: var(--white); }
+    .nav-links .nav-cta .btn { padding: 10px 22px; font-size: .85rem; }
+
+    /* Hamburger */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+      background: none;
+      border: none;
+    }
+    .hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--white);
+      border-radius: 2px;
+      transition: transform .3s, opacity .3s;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* Mobile menu */
+    .mobile-menu {
+      display: none;
+      flex-direction: column;
+      gap: 0;
+      background: rgba(0,24,38,.97);
+      backdrop-filter: blur(16px);
+      padding-bottom: 20px;
+    }
+    .mobile-menu a {
+      display: block;
+      padding: 14px 28px;
+      font-size: .95rem;
+      font-weight: 600;
+      color: rgba(255,255,255,.8);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      transition: color var(--transition);
+    }
+    .mobile-menu a:hover { color: var(--aqua); }
+    .mobile-menu .mob-cta {
+      margin: 16px 28px 0;
+      text-align: center;
+      border: none;
+    }
+    .mobile-menu.open { display: flex; }
+
+    /* ══════════════════════════════════════
+       2. HERO
+    ══════════════════════════════════════ */
+    #hero {
+      position: relative;
+      background: var(--navy);
+      padding: 160px 0 100px;
+      overflow: hidden;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+    }
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+    .hero-content { position: relative; z-index: 2; }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(30,150,252,.12);
+      border: 1px solid rgba(30,150,252,.3);
+      border-radius: 50px;
+      padding: 6px 16px;
+      font-size: .78rem;
+      font-weight: 600;
+      color: var(--aqua);
+      letter-spacing: .06em;
+      margin-bottom: 28px;
+    }
+    .hero-badge::before {
+      content: '';
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--aqua);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: .5; transform: scale(1.4); }
+    }
+    .hero-h1 {
+      font-size: clamp(2.2rem, 5vw, 3.6rem);
+      font-weight: 800;
+      line-height: 1.12;
+      letter-spacing: -.01em;
+      margin-bottom: 24px;
+    }
+    .hero-h1 .accent { color: var(--aqua); }
+    .hero-sub {
+      font-size: 1.05rem;
+      font-weight: 400;
+      color: rgba(255,255,255,.72);
+      max-width: 480px;
+      margin-bottom: 40px;
+    }
+    .hero-cta-group {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 14px;
+    }
+    .hero-note {
+      font-size: .8rem;
+      color: var(--aqua);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .hero-note::before { content: '✦'; font-size: .65rem; }
+
+    /* Hero visual */
+    .hero-visual {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .hero-svg-wrap {
+      width: 100%;
+      max-width: 500px;
+      opacity: .9;
+    }
+
+    /* Background glow */
+    .hero-glow {
+      position: absolute;
+      top: -100px; right: -200px;
+      width: 700px; height: 700px;
+      background: radial-gradient(circle, rgba(30,150,252,.14) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-glow-2 {
+      position: absolute;
+      bottom: -150px; left: -100px;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(149,242,217,.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* ══════════════════════════════════════
+       3. PRO KOHO
+    ══════════════════════════════════════ */
+    #pro-koho {
+      background: var(--section-alt);
+      padding: 110px 0;
+    }
+    .section-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+    .cards-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+    }
+    .audience-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 40px 36px;
+      border-left: 4px solid var(--blue);
+      position: relative;
+      overflow: hidden;
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .audience-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, var(--blue), transparent);
+      opacity: .5;
+    }
+    .audience-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 50px rgba(0,0,0,.3);
+    }
+    .card-icon {
+      width: 52px; height: 52px;
+      background: rgba(30,150,252,.12);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 22px;
+      font-size: 1.4rem;
+    }
+    .card-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 14px;
+      color: var(--white);
+    }
+    .card-text {
+      font-size: .92rem;
+      color: rgba(255,255,255,.68);
+      line-height: 1.75;
+    }
+    .card-accent {
+      display: inline-block;
+      margin-top: 20px;
+      font-size: .8rem;
+      font-weight: 700;
+      color: var(--aqua);
+      letter-spacing: .05em;
+    }
+
+    /* ══════════════════════════════════════
+       4. JAK TO FUNGUJE
+    ══════════════════════════════════════ */
+    #jak-to-funguje {
+      background: var(--navy);
+      padding: 110px 0;
+    }
+    .steps-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      position: relative;
+      margin-top: 70px;
+    }
+    /* connector line between steps */
+    .steps-row::before {
+      content: '';
+      position: absolute;
+      top: 32px;
+      left: calc(16.66% + 16px);
+      right: calc(16.66% + 16px);
+      height: 2px;
+      background: linear-gradient(90deg, var(--blue), var(--aqua));
+      opacity: .3;
+    }
+    .step {
+      padding: 0 24px;
+      text-align: center;
+      position: relative;
+    }
+    .step-num {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      background: var(--blue);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--white);
+      margin: 0 auto 28px;
+      position: relative;
+      z-index: 1;
+      box-shadow: 0 0 0 8px rgba(30,150,252,.12);
+    }
+    .step-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .step-text {
+      font-size: .9rem;
+      color: rgba(255,255,255,.65);
+      line-height: 1.75;
+    }
+    .step-icon-label {
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--aqua);
+      margin-bottom: 10px;
+    }
+
+    /* ══════════════════════════════════════
+       5. PROČ NEXARI
+    ══════════════════════════════════════ */
+    #proc-nexari {
+      background: var(--section-alt);
+      padding: 110px 0;
+    }
+    .proc-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+    .proc-left {}
+    .proc-list {
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+      margin-top: 42px;
+    }
+    .proc-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 18px;
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 22px 24px;
+      transition: transform var(--transition);
+    }
+    .proc-item:hover { transform: translateX(6px); }
+    .proc-check {
+      flex-shrink: 0;
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      background: rgba(149,242,217,.1);
+      border: 1px solid rgba(149,242,217,.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      color: var(--aqua);
+    }
+    .proc-text { font-size: .93rem; line-height: 1.65; }
+    .proc-text strong {
+      display: block;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 3px;
+    }
+    .proc-text span { color: rgba(255,255,255,.62); }
+
+    /* Right: abstract stats/visual */
+    .proc-right {
+      display: flex;
+      justify-content: center;
+    }
+    .stats-card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 40px 36px;
+      width: 100%;
+      max-width: 360px;
+      border: 1px solid rgba(255,255,255,.06);
+    }
+    .stats-card-title {
+      font-size: .8rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--aqua);
+      margin-bottom: 28px;
+    }
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 0;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .stat-row:last-child { border-bottom: none; }
+    .stat-label { font-size: .88rem; color: rgba(255,255,255,.65); }
+    .stat-value {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--blue);
+    }
+    .stat-value.aqua { color: var(--aqua); }
+
+    /* ══════════════════════════════════════
+       6. CTA SECTION
+    ══════════════════════════════════════ */
+    #cta-section {
+      background: var(--navy);
+      padding: 120px 0;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    #cta-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center top, rgba(30,150,252,.12) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .cta-eyebrow {
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--aqua);
+      margin-bottom: 18px;
+    }
+    .cta-h2 {
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      font-weight: 800;
+      line-height: 1.18;
+      max-width: 680px;
+      margin: 0 auto 20px;
+    }
+    .cta-h2 span {
+      position: relative;
+      display: inline-block;
+    }
+    .cta-h2 span::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0; right: 0;
+      height: 3px;
+      background: var(--aqua);
+      border-radius: 2px;
+    }
+    .cta-sub {
+      font-size: 1.02rem;
+      color: rgba(255,255,255,.65);
+      margin-bottom: 44px;
+    }
+    .cta-btn-wrap { display: flex; justify-content: center; }
+    .btn-cta-large {
+      padding: 18px 48px;
+      font-size: 1.05rem;
+    }
+
+    /* ══════════════════════════════════════
+       7. FOOTER
+    ══════════════════════════════════════ */
+    footer {
+      background: #001b28;
+      padding: 60px 0 36px;
+      border-top: 1px solid rgba(255,255,255,.06);
+    }
+    .footer-top {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      padding-bottom: 48px;
+      border-bottom: 1px solid rgba(255,255,255,.07);
+    }
+    .footer-brand {}
+    .footer-logo { margin-bottom: 12px; }
+    .footer-tagline {
+      font-size: .88rem;
+      color: rgba(255,255,255,.5);
+      margin-top: 8px;
+      font-weight: 400;
+    }
+    .footer-contact-label {
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--aqua);
+      margin-bottom: 18px;
+    }
+    .footer-contact-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      list-style: none;
+    }
+    .footer-contact-list li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: .92rem;
+      color: rgba(255,255,255,.72);
+    }
+    .footer-contact-list li a {
+      color: rgba(255,255,255,.72);
+      transition: color var(--transition);
+    }
+    .footer-contact-list li a:hover { color: var(--aqua); }
+    .contact-icon {
+      width: 34px; height: 34px;
+      border-radius: 9px;
+      background: rgba(255,255,255,.06);
+      display: flex; align-items: center; justify-content: center;
+      font-size: .95rem;
+      flex-shrink: 0;
+    }
+    .social-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 22px;
+    }
+    .social-link {
+      width: 38px; height: 38px;
+      border-radius: 10px;
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background var(--transition), border-color var(--transition), transform var(--transition);
+    }
+    .social-link:hover {
+      background: rgba(30,150,252,.2);
+      border-color: var(--blue);
+      transform: translateY(-2px);
+    }
+    .social-link svg { width: 17px; height: 17px; fill: rgba(255,255,255,.75); }
+    .social-link:hover svg { fill: var(--white); }
+    .footer-bottom {
+      margin-top: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .8rem;
+      color: rgba(255,255,255,.3);
+    }
+
+    /* ══════════════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════════════ */
+    @media (max-width: 900px) {
+      .hero-inner { grid-template-columns: 1fr; text-align: center; gap: 50px; }
+      .hero-sub { max-width: 100%; margin-left: auto; margin-right: auto; }
+      .hero-cta-group { align-items: center; }
+      .hero-visual { order: -1; max-width: 340px; margin: 0 auto; }
+      .hero-glow { display: none; }
+      .cards-grid { grid-template-columns: 1fr; }
+      .steps-row {
+        grid-template-columns: 1fr;
+        gap: 48px;
+      }
+      .steps-row::before { display: none; }
+      .proc-inner { grid-template-columns: 1fr; gap: 50px; }
+      .proc-right { display: none; }
+      .footer-top { grid-template-columns: 1fr; gap: 40px; }
+    }
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      #hero { padding: 130px 0 80px; min-height: auto; }
+      .hero-h1 { font-size: 2rem; }
+      .section-title { font-size: 1.7rem; }
+      .audience-card { padding: 30px 24px; }
+      .step { padding: 0; }
+      #cta-section { padding: 90px 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════
+       NAVIGATION
+  ══════════════════════════════════════ -->
+  <nav id="navbar" role="navigation" aria-label="Hlavní navigace">
+    <div class="container">
+      <div class="nav-inner">
+        <!-- Logo -->
+        <a href="#hero" class="nav-logo" aria-label="Nexari – domů">
+          <span class="logo-word">
+            <span class="logo-n1">N</span><span class="logo-e">E</span><span class="logo-x">X</span><span class="logo-a">A</span><span class="logo-r">R</span><span class="logo-i">I</span>
+          </span>
+        </a>
+
+        <!-- Desktop links -->
+        <ul class="nav-links" role="list">
+          <li><a href="#jak-to-funguje">Jak to funguje</a></li>
+          <li><a href="#pro-koho">Pro koho</a></li>
+          <li class="nav-cta">
+            <a href="#reservovat-call" class="btn btn-primary">Rezervovat call</a>
+          </li>
+        </ul>
+
+        <!-- Hamburger -->
+        <button class="hamburger" id="hamburger" aria-label="Otevřít menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+
+      <!-- Mobile menu -->
+      <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+        <a href="#jak-to-funguje" class="mob-link">Jak to funguje</a>
+        <a href="#pro-koho" class="mob-link">Pro koho</a>
+        <a href="#reservovat-call" class="mob-cta btn btn-primary">Rezervovat call</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ══════════════════════════════════════
+       HERO
+  ══════════════════════════════════════ -->
+  <section id="hero" aria-labelledby="hero-heading">
+    <div class="hero-glow" aria-hidden="true"></div>
+    <div class="hero-glow-2" aria-hidden="true"></div>
+    <div class="container">
+      <div class="hero-inner">
+        <div class="hero-content">
+          <div class="hero-badge fade-in">AI Automatizace pro Obchodní Týmy</div>
+          <h1 class="hero-h1 fade-in fade-in-delay-1" id="hero-heading">
+            Zvyšte obchodní kapacitu —<br>
+            <span class="accent">bez rozšiřování</span> týmu.
+          </h1>
+          <p class="hero-sub fade-in fade-in-delay-2">
+            Navrhuji a implementuji AI systémy, které automatizují rutinu a uvolní váš tým pro to, co skutečně generuje příjem.
+          </p>
+          <div class="hero-cta-group fade-in fade-in-delay-3">
+            <a href="#reservovat-call" class="btn btn-primary btn-cta-large">
+              Rezervovat bezplatnou konzultaci
+            </a>
+            <p class="hero-note">
+              30 minut. Bez závazků. Zjistíte přesně, co automatizovat jako první.
+            </p>
+          </div>
+        </div>
+
+        <!-- Hero visual — SVG node/flow graphic -->
+        <div class="hero-visual fade-in fade-in-delay-2" aria-hidden="true">
+          <div class="hero-svg-wrap">
+            <svg viewBox="0 0 480 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <radialGradient id="glow1" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="#1E96FC" stop-opacity=".22"/>
+                  <stop offset="100%" stop-color="#1E96FC" stop-opacity="0"/>
+                </radialGradient>
+                <radialGradient id="glow2" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="#95F2D9" stop-opacity=".18"/>
+                  <stop offset="100%" stop-color="#95F2D9" stop-opacity="0"/>
+                </radialGradient>
+                <filter id="blur1">
+                  <feGaussianBlur stdDeviation="8"/>
+                </filter>
+                <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#1E96FC" stop-opacity=".5"/>
+                  <stop offset="100%" stop-color="#95F2D9" stop-opacity=".5"/>
+                </linearGradient>
+                <linearGradient id="lineGrad2" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#95F2D9" stop-opacity=".4"/>
+                  <stop offset="100%" stop-color="#1E96FC" stop-opacity=".4"/>
+                </linearGradient>
+              </defs>
+
+              <!-- Background glows -->
+              <ellipse cx="240" cy="210" rx="200" ry="180" fill="url(#glow1)" filter="url(#blur1)"/>
+              <ellipse cx="340" cy="120" rx="100" ry="90" fill="url(#glow2)" filter="url(#blur1)"/>
+
+              <!-- Connection lines -->
+              <line x1="100" y1="200" x2="240" y2="120" stroke="url(#lineGrad)" stroke-width="1.5"/>
+              <line x1="240" y1="120" x2="380" y2="180" stroke="url(#lineGrad)" stroke-width="1.5"/>
+              <line x1="380" y1="180" x2="320" y2="320" stroke="url(#lineGrad2)" stroke-width="1.5"/>
+              <line x1="320" y1="320" x2="160" y2="320" stroke="url(#lineGrad2)" stroke-width="1.5"/>
+              <line x1="160" y1="320" x2="100" y2="200" stroke="url(#lineGrad)" stroke-width="1.5"/>
+              <line x1="240" y1="120" x2="240" y2="220" stroke="url(#lineGrad)" stroke-width="1" stroke-dasharray="4 4"/>
+              <line x1="100" y1="200" x2="240" y2="220" stroke="url(#lineGrad)" stroke-width="1" stroke-dasharray="4 4"/>
+              <line x1="380" y1="180" x2="240" y2="220" stroke="url(#lineGrad)" stroke-width="1" stroke-dasharray="4 4"/>
+              <line x1="160" y1="320" x2="240" y2="220" stroke="url(#lineGrad2)" stroke-width="1" stroke-dasharray="4 4"/>
+              <line x1="320" y1="320" x2="240" y2="220" stroke="url(#lineGrad2)" stroke-width="1" stroke-dasharray="4 4"/>
+
+              <!-- Extra outer nodes -->
+              <line x1="60" y1="90" x2="100" y2="200" stroke="#1E96FC" stroke-width="1" stroke-opacity=".25"/>
+              <line x1="420" y1="80" x2="380" y2="180" stroke="#95F2D9" stroke-width="1" stroke-opacity=".25"/>
+              <line x1="440" y1="340" x2="320" y2="320" stroke="#1E96FC" stroke-width="1" stroke-opacity=".25"/>
+              <line x1="50" y1="360" x2="160" y2="320" stroke="#95F2D9" stroke-width="1" stroke-opacity=".25"/>
+
+              <!-- Central hub -->
+              <circle cx="240" cy="220" r="38" fill="rgba(30,150,252,.08)" stroke="#1E96FC" stroke-width="1.5" stroke-opacity=".6"/>
+              <circle cx="240" cy="220" r="24" fill="rgba(30,150,252,.14)" stroke="#1E96FC" stroke-width="1.5"/>
+              <circle cx="240" cy="220" r="10" fill="#1E96FC"/>
+
+              <!-- Main nodes -->
+              <circle cx="240" cy="120" r="18" fill="#002538" stroke="#95F2D9" stroke-width="2"/>
+              <circle cx="240" cy="120" r="8" fill="#95F2D9"/>
+
+              <circle cx="380" cy="180" r="18" fill="#002538" stroke="#1E96FC" stroke-width="2"/>
+              <circle cx="380" cy="180" r="8" fill="#1E96FC"/>
+
+              <circle cx="320" cy="320" r="18" fill="#002538" stroke="#95F2D9" stroke-width="2"/>
+              <circle cx="320" cy="320" r="8" fill="#95F2D9"/>
+
+              <circle cx="160" cy="320" r="18" fill="#002538" stroke="#1E96FC" stroke-width="2"/>
+              <circle cx="160" cy="320" r="8" fill="#1E96FC"/>
+
+              <circle cx="100" cy="200" r="18" fill="#002538" stroke="#95F2D9" stroke-width="2"/>
+              <circle cx="100" cy="200" r="8" fill="#95F2D9"/>
+
+              <!-- Outer small nodes -->
+              <circle cx="60" cy="90" r="9" fill="#002538" stroke="#1E96FC" stroke-width="1.5" stroke-opacity=".5"/>
+              <circle cx="60" cy="90" r="4" fill="#1E96FC" fill-opacity=".6"/>
+
+              <circle cx="420" cy="80" r="9" fill="#002538" stroke="#95F2D9" stroke-width="1.5" stroke-opacity=".5"/>
+              <circle cx="420" cy="80" r="4" fill="#95F2D9" fill-opacity=".6"/>
+
+              <circle cx="440" cy="340" r="9" fill="#002538" stroke="#1E96FC" stroke-width="1.5" stroke-opacity=".5"/>
+              <circle cx="440" cy="340" r="4" fill="#1E96FC" fill-opacity=".6"/>
+
+              <circle cx="50" cy="360" r="9" fill="#002538" stroke="#95F2D9" stroke-width="1.5" stroke-opacity=".5"/>
+              <circle cx="50" cy="360" r="4" fill="#95F2D9" fill-opacity=".6"/>
+
+              <!-- Floating dots -->
+              <circle cx="170" cy="80" r="3" fill="#1E96FC" fill-opacity=".35"/>
+              <circle cx="310" cy="65" r="4" fill="#95F2D9" fill-opacity=".3"/>
+              <circle cx="430" cy="240" r="3" fill="#1E96FC" fill-opacity=".3"/>
+              <circle cx="400" cy="380" r="4" fill="#95F2D9" fill-opacity=".25"/>
+              <circle cx="90" cy="360" r="3" fill="#1E96FC" fill-opacity=".3"/>
+              <circle cx="30" cy="220" r="4" fill="#95F2D9" fill-opacity=".25"/>
+
+              <!-- Animated pulse rings on center -->
+              <circle cx="240" cy="220" r="50" fill="none" stroke="#1E96FC" stroke-width="1" stroke-opacity=".15">
+                <animate attributeName="r" values="38;60;38" dur="3s" repeatCount="indefinite"/>
+                <animate attributeName="stroke-opacity" values=".2;0;.2" dur="3s" repeatCount="indefinite"/>
+              </circle>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       PRO KOHO
+  ══════════════════════════════════════ -->
+  <section id="pro-koho" aria-labelledby="pro-koho-heading">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-label fade-in">Cílová skupina</p>
+        <h2 class="section-title fade-in fade-in-delay-1" id="pro-koho-heading">Pro koho to je</h2>
+      </div>
+      <div class="cards-grid">
+        <div class="audience-card fade-in fade-in-delay-1">
+          <div class="card-icon" aria-hidden="true">💼</div>
+          <h3 class="card-title">Finanční poradci a makléřské společnosti</h3>
+          <p class="card-text">
+            Řídíte tým obchodníků a víte, kolik času padne na administrativu, followupy a ruční reporty. Systémy od Nexari to dělají za vás — automaticky, přesně, 24/7.
+          </p>
+          <span class="card-accent">✦ Automatizace reportů &amp; followupů</span>
+        </div>
+        <div class="audience-card fade-in fade-in-delay-2">
+          <div class="card-icon" aria-hidden="true">🏢</div>
+          <h3 class="card-title">Realitní makléři</h3>
+          <p class="card-text">
+            Od prvního kontaktu s klientem po podpis smlouvy — každý krok lze zrychlit a automatizovat. Méně manuální práce, více uzavřených obchodů.
+          </p>
+          <span class="card-accent">✦ Rychlejší pipeline, více obchodů</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       JAK TO FUNGUJE
+  ══════════════════════════════════════ -->
+  <section id="jak-to-funguje" aria-labelledby="jak-heading">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-label fade-in">Proces</p>
+        <h2 class="section-title fade-in fade-in-delay-1" id="jak-heading">Jak spolupráce vypadá</h2>
+      </div>
+      <div class="steps-row">
+        <div class="step fade-in fade-in-delay-1">
+          <div class="step-num" aria-label="Krok 1">1</div>
+          <p class="step-icon-label">Audit</p>
+          <h3 class="step-title">Bezplatná konzultace</h3>
+          <p class="step-text">
+            Bezplatná 30minutová konzultace, kde zjistíme kde ztrácíte nejvíc času a co dává největší smysl automatizovat.
+          </p>
+        </div>
+        <div class="step fade-in fade-in-delay-2">
+          <div class="step-num" aria-label="Krok 2">2</div>
+          <p class="step-icon-label">Návrh řešení</p>
+          <h3 class="step-title">Konkrétní plán</h3>
+          <p class="step-text">
+            Dostanete konkrétní plán — co postavíme, jak to bude fungovat a co vám to přinese. Žádné technické žargony.
+          </p>
+        </div>
+        <div class="step fade-in fade-in-delay-3">
+          <div class="step-num" aria-label="Krok 3">3</div>
+          <p class="step-icon-label">Implementace</p>
+          <h3 class="step-title">Hotový systém</h3>
+          <p class="step-text">
+            Systém postavíme, otestujeme a předáme. Vy se soustředíte na klienty, zbytek běží sám.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       PROČ NEXARI
+  ══════════════════════════════════════ -->
+  <section id="proc-nexari" aria-labelledby="proc-heading">
+    <div class="container">
+      <div class="proc-inner">
+        <div class="proc-left">
+          <p class="section-label fade-in">Výhody</p>
+          <h2 class="section-title fade-in fade-in-delay-1" id="proc-heading">Proč Nexari</h2>
+          <div class="proc-list">
+            <div class="proc-item fade-in fade-in-delay-1">
+              <div class="proc-check" aria-hidden="true">✦</div>
+              <p class="proc-text">
+                <strong>Systémy na míru</strong>
+                <span>Žádné generické šablony — řešení navržené přesně pro váš byznys a tým.</span>
+              </p>
+            </div>
+            <div class="proc-item fade-in fade-in-delay-2">
+              <div class="proc-check" aria-hidden="true">⚡</div>
+              <p class="proc-text">
+                <strong>Rychlá implementace</strong>
+                <span>První výsledky do 2–4 týdnů — bez zdlouhavých projektů a nejistoty.</span>
+              </p>
+            </div>
+            <div class="proc-item fade-in fade-in-delay-3">
+              <div class="proc-check" aria-hidden="true">👁</div>
+              <p class="proc-text">
+                <strong>Rozumíte výsledkům, ne technologii</strong>
+                <span>Vy vidíte výstup a úspory, ne kód. Techniku řeším za vás.</span>
+              </p>
+            </div>
+            <div class="proc-item fade-in fade-in-delay-4">
+              <div class="proc-check" aria-hidden="true">🎯</div>
+              <p class="proc-text">
+                <strong>Jeden člověk, plná odpovědnost</strong>
+                <span>Vždy víte, na koho se obrátit. Žádná anonymní agentura, žádné předávání mezi týmy.</span>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stats visual -->
+        <div class="proc-right fade-in fade-in-delay-2" aria-label="Orientační výsledky klientů">
+          <div class="stats-card">
+            <p class="stats-card-title">Orientační výsledky</p>
+            <div class="stat-row">
+              <span class="stat-label">Ušetřený čas / týden</span>
+              <span class="stat-value">10–20 h</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Do spuštění systému</span>
+              <span class="stat-value aqua">2–4 týdny</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Dostupnost automatizace</span>
+              <span class="stat-value">24 / 7</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Ruční reporty</span>
+              <span class="stat-value aqua">→ 0</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       CTA SECTION
+  ══════════════════════════════════════ -->
+  <section id="cta-section" aria-labelledby="cta-heading">
+    <div class="container">
+      <p class="cta-eyebrow fade-in">Konzultace zdarma</p>
+      <h2 class="cta-h2 fade-in fade-in-delay-1" id="cta-heading">
+        Zjistěte za 30 minut,<br>
+        co by šlo u vás <span>automatizovat</span>.
+      </h2>
+      <p class="cta-sub fade-in fade-in-delay-2">Konzultace je zdarma a bez závazků.</p>
+      <div class="cta-btn-wrap fade-in fade-in-delay-3">
+        <a href="#reservovat-call" class="btn btn-primary btn-cta-large">Vybrat termín</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       FOOTER
+  ══════════════════════════════════════ -->
+  <footer>
+    <div class="container">
+      <div class="footer-top">
+        <!-- Brand -->
+        <div class="footer-brand">
+          <div class="footer-logo">
+            <a href="#hero" class="nav-logo" style="font-size:1.4rem;" aria-label="Nexari domů">
+              <span class="logo-word">
+                <span class="logo-n1">N</span><span class="logo-e">E</span><span class="logo-x">X</span><span class="logo-a">A</span><span class="logo-r">R</span><span class="logo-i">I</span>
+              </span>
+            </a>
+          </div>
+          <p class="footer-tagline">AI automatizace pro obchodní týmy</p>
+
+          <!-- Social links -->
+          <div class="social-row" aria-label="Sociální sítě">
+            <!-- LinkedIn -->
+            <a href="https://www.linkedin.com/in/luk%C3%A1%C5%A1-kondel%C3%ADk-9450842a8/" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profil Lukáše Kondelíka">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+              </svg>
+            </a>
+            <!-- Instagram -->
+            <a href="https://www.instagram.com/lukyno_kondelik/" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="Instagram profil Lukáše Kondelíka">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Contact -->
+        <div class="footer-contact">
+          <p class="footer-contact-label">Máte otázky? Ozvěte se přímo.</p>
+          <ul class="footer-contact-list">
+            <li>
+              <span class="contact-icon" aria-hidden="true">📞</span>
+              <a href="tel:+420601505713">+420 601 505 713</a>
+            </li>
+            <li>
+              <span class="contact-icon" aria-hidden="true">✉️</span>
+              <a href="mailto:lukaskondelik@nexari.cz">lukaskondelik@nexari.cz</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>© 2026 Nexari | Lukáš Kondelík</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ─── Sticky nav ───
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 40);
+    }, { passive: true });
+
+    // ─── Hamburger menu ───
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobile-menu');
+    hamburger.addEventListener('click', () => {
+      const isOpen = hamburger.classList.toggle('open');
+      mobileMenu.classList.toggle('open', isOpen);
+      hamburger.setAttribute('aria-expanded', String(isOpen));
+      mobileMenu.setAttribute('aria-hidden', String(!isOpen));
+    });
+    // Close on link click
+    mobileMenu.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => {
+        hamburger.classList.remove('open');
+        mobileMenu.classList.remove('open');
+        hamburger.setAttribute('aria-expanded', 'false');
+        mobileMenu.setAttribute('aria-hidden', 'true');
+      });
+    });
+
+    // ─── Scroll fade-in ───
+    const fadeEls = document.querySelectorAll('.fade-in');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+    fadeEls.forEach(el => observer.observe(el));
+
+    // ─── Smooth scroll for # links ───
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', e => {
+        const target = document.querySelector(anchor.getAttribute('href'));
+        if (target) {
+          e.preventDefault();
+          const offset = 72; // navbar height
+          const top = target.getBoundingClientRect().top + window.scrollY - offset;
+          window.scrollTo({ top, behavior: 'smooth' });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
