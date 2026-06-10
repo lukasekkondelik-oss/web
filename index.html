@@ -384,6 +384,68 @@
       color: var(--aqua);
       letter-spacing: .05em;
     }
+    .card-divider {
+      height: 1px;
+      background: rgba(255,255,255,.07);
+      margin: 22px 0;
+    }
+    .card-section-label {
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 12px;
+    }
+    .card-features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 0;
+    }
+    .card-features li {
+      font-size: .88rem;
+      color: rgba(255,255,255,.68);
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      line-height: 1.55;
+    }
+    .card-features li::before {
+      content: '›';
+      color: var(--blue);
+      font-weight: 700;
+      font-size: 1rem;
+      line-height: 1.3;
+      flex-shrink: 0;
+    }
+    .card-benefits {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .card-benefit {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: .88rem;
+      line-height: 1.55;
+    }
+    .card-benefit-dot {
+      flex-shrink: 0;
+      width: 20px; height: 20px;
+      border-radius: 6px;
+      background: rgba(149,242,217,.1);
+      border: 1px solid rgba(149,242,217,.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .65rem;
+      color: var(--aqua);
+      margin-top: 1px;
+    }
+    .card-benefit span { color: rgba(255,255,255,.72); }
 
     /* ══════════════════════════════════════
        4. JAK TO FUNGUJE
@@ -998,22 +1060,83 @@ NE<span class="logo-x">X</span>ARI
         <h2 class="section-title fade-in fade-in-delay-1" id="pro-koho-heading">Pro koho to je</h2>
       </div>
       <div class="cards-grid">
+
+        <!-- Finanční poradci -->
         <div class="audience-card fade-in fade-in-delay-1">
           <div class="card-icon" aria-hidden="true">💼</div>
-          <h3 class="card-title">Finanční poradci a makléřské společnosti</h3>
+          <h3 class="card-title">Finanční poradci</h3>
           <p class="card-text">
-            Řídíte tým obchodníků a víte, kolik času padne na administrativu, followupy a ruční reporty. Systémy od Nexari to dělají za vás — automaticky, přesně, 24/7.
+            Skutečná hodnota finančního poradce není v jednorázovém obchodu — je v dlouhodobém vztahu s klientem. Jenže čím více klientů máte, tím víc času mizí v administrativě, dokumentech a follow-upech místo v poradenství.
           </p>
-          <span class="card-accent">✦ Automatizace reportů &amp; followupů</span>
+
+          <div class="card-divider"></div>
+          <p class="card-section-label">Co automatizujeme</p>
+          <ul class="card-features">
+            <li>Onboarding nového klienta — uvítací komunikace, sběr podkladů, checklist dokumentů</li>
+            <li>Sledování životních událostí — konce fixací, výročí smluv, narozeniny, milníky</li>
+            <li>Příprava na schůzku — automatické shrnutí klienta, otevřené úkoly, návrh témat</li>
+            <li>Follow-up sekvence po schůzce nebo poptávce — žádný kontakt se neztratí</li>
+            <li>Správa a kontrola dokumentů — upozornění na chybějící podklady</li>
+            <li>Obsah na sociální sítě z vašich znalostí a poznámek</li>
+          </ul>
+
+          <div class="card-divider"></div>
+          <p class="card-section-label">Co z toho máte</p>
+          <div class="card-benefits">
+            <div class="card-benefit">
+              <div class="card-benefit-dot">✦</div>
+              <span>Více času na klienty — rutinu dělá systém, ne vy</span>
+            </div>
+            <div class="card-benefit">
+              <div class="card-benefit-dot">✦</div>
+              <span>Žádný klient ani příležitost nevypadne ze systému jen proto, že na něj nebyl čas</span>
+            </div>
+            <div class="card-benefit">
+              <div class="card-benefit-dot">✦</div>
+              <span>Profesionálnější dojem — klient vidí, že o něj někdo skutečně pečuje</span>
+            </div>
+          </div>
+          <span class="card-accent">✦ Celoživotní hodnota klienta 200 000 – 1 000 000 Kč</span>
         </div>
+
+        <!-- Realitní makléři -->
         <div class="audience-card fade-in fade-in-delay-2">
           <div class="card-icon" aria-hidden="true">🏢</div>
-          <h3 class="card-title">Realitní makléři</h3>
+          <h3 class="card-title">Realitní makléři a kanceláře</h3>
           <p class="card-text">
-            Od prvního kontaktu s klientem po podpis smlouvy — každý krok lze zrychlit a automatizovat. Méně manuální práce, více uzavřených obchodů.
+            Realitní obchod není jen prodej nemovitosti — je to souběh inzerce, prohlídek, dokumentů, komunikace s majitelem i zájemci a neustálého follow-upu. Systémy od Nexari dávají celému procesu řád a rychlost.
           </p>
-          <span class="card-accent">✦ Rychlejší pipeline, více obchodů</span>
+
+          <div class="card-divider"></div>
+          <p class="card-section-label">Co automatizujeme</p>
+          <ul class="card-features">
+            <li>Kvalifikace leadů z inzerce — automatická odpověď, sběr preferencí a rozpočtu, zápis do CRM</li>
+            <li>Plánování a potvrzování prohlídek — návrh termínu, připomenutí, instrukce, follow-up</li>
+            <li>Koordinace transakce — milníky, termíny podpisů, přehled fáze každého obchodu</li>
+            <li>Správa dokumentů — kontrola chybějících podkladů, propojení s e-podpisem</li>
+            <li>Follow-up se zájemci, majiteli i former klienty — reaktivace starších kontaktů</li>
+            <li>Obsah na sociální sítě — příspěvky z nemovitostí, trhu a zkušeností bez ruční práce</li>
+          </ul>
+
+          <div class="card-divider"></div>
+          <p class="card-section-label">Co z toho máte</p>
+          <div class="card-benefits">
+            <div class="card-benefit">
+              <div class="card-benefit-dot">✦</div>
+              <span>Žádná příležitost nezmizí — systém hlídá poptávky i za vás</span>
+            </div>
+            <div class="card-benefit">
+              <div class="card-benefit-dot">✦</div>
+              <span>Rychlejší reakce = konkurenční výhoda v každém obchodě</span>
+            </div>
+            <div class="card-benefit">
+              <div class="card-benefit-dot">✦</div>
+              <span>Přehled nad všemi obchody najednou — víte, co se děje a co musíte řešit</span>
+            </div>
+          </div>
+          <span class="card-accent">✦ Provize 40 000 – 1 000 000 Kč za transakci</span>
         </div>
+
       </div>
     </div>
   </section>
@@ -1077,7 +1200,7 @@ NE<span class="logo-x">X</span>ARI
               <div class="proc-check" aria-hidden="true">⚡</div>
               <p class="proc-text">
                 <strong>Rychlá implementace</strong>
-                <span>První výsledky do 2–4 týdnů — bez zdlouhavých projektů a nejistoty.</span>
+                <span>První výsledky do 2–6 týdnů — bez zdlouhavých projektů a nejistoty.</span>
               </p>
             </div>
             <div class="proc-item fade-in fade-in-delay-3">
@@ -1107,7 +1230,7 @@ NE<span class="logo-x">X</span>ARI
             </div>
             <div class="stat-row">
               <span class="stat-label">Do spuštění systému</span>
-              <span class="stat-value aqua">2–4 týdny</span>
+              <span class="stat-value aqua">2–6 týdnů</span>
             </div>
             <div class="stat-row">
               <span class="stat-label">Dostupnost automatizace</span>
