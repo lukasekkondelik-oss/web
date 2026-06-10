@@ -675,10 +675,118 @@
     .footer-bottom {
       margin-top: 32px;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
+      gap: 8px;
       font-size: .8rem;
       color: rgba(255,255,255,.3);
+      text-align: center;
+    }
+    .footer-bottom a {
+      color: rgba(255,255,255,.45);
+      transition: color var(--transition);
+    }
+    .footer-bottom a:hover { color: var(--aqua); }
+
+    /* ─── GDPR Modal ─── */
+    #gdpr-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
+      background: rgba(0,0,0,.75);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    #gdpr-modal.open { display: flex; }
+    .gdpr-card {
+      background: #002538;
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 760px;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(30,150,252,.4) transparent;
+    }
+    .gdpr-card::-webkit-scrollbar { width: 5px; }
+    .gdpr-card::-webkit-scrollbar-track { background: transparent; }
+    .gdpr-card::-webkit-scrollbar-thumb { background: rgba(30,150,252,.4); border-radius: 10px; }
+    .gdpr-header {
+      position: sticky;
+      top: 0;
+      background: #002538;
+      border-bottom: 1px solid rgba(255,255,255,.07);
+      padding: 24px 32px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 1;
+    }
+    .gdpr-header h2 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--white);
+    }
+    .gdpr-close {
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.12);
+      color: rgba(255,255,255,.7);
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background var(--transition), color var(--transition);
+      flex-shrink: 0;
+    }
+    .gdpr-close:hover { background: rgba(255,255,255,.14); color: var(--white); }
+    .gdpr-body {
+      padding: 32px 32px 40px;
+      color: rgba(255,255,255,.78);
+      font-size: .9rem;
+      line-height: 1.75;
+    }
+    .gdpr-body h3 {
+      font-size: .95rem;
+      font-weight: 700;
+      color: var(--white);
+      margin: 28px 0 10px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(255,255,255,.06);
+    }
+    .gdpr-body h3:first-child { margin-top: 0; border-top: none; }
+    .gdpr-body p { margin-bottom: 10px; }
+    .gdpr-body ul { padding-left: 20px; margin-bottom: 10px; }
+    .gdpr-body ul li { margin-bottom: 6px; }
+    .gdpr-body strong { color: var(--white); font-weight: 600; }
+    .gdpr-body a { color: var(--aqua); text-decoration: underline; text-underline-offset: 3px; }
+    .gdpr-body a:hover { color: var(--blue); }
+    .gdpr-info-box {
+      background: rgba(30,150,252,.07);
+      border: 1px solid rgba(30,150,252,.2);
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-bottom: 10px;
+    }
+    .gdpr-info-box p { margin-bottom: 4px; }
+    .gdpr-updated {
+      font-size: .78rem;
+      color: rgba(255,255,255,.35);
+      margin-top: 32px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255,255,255,.06);
+    }
+    @media (max-width: 640px) {
+      .gdpr-header { padding: 18px 20px 16px; }
+      .gdpr-body { padding: 24px 20px 32px; }
     }
 
     /* ══════════════════════════════════════
@@ -1083,10 +1191,112 @@ NE<span class="logo-x">X</span>ARI
       </div>
 
       <div class="footer-bottom">
-        <p>© 2026 Nexari | Lukáš Kondelík</p>
+        <p>© 2026 Nexari | Lukáš Kondelík &nbsp;·&nbsp; IČO: 24868027</p>
+        <p>
+          <a href="#" id="gdpr-open-btn" aria-haspopup="dialog">Ochrana osobních údajů</a>
+        </p>
       </div>
     </div>
   </footer>
+
+  <!-- ══════════════════════════════════════
+       GDPR MODAL
+  ══════════════════════════════════════ -->
+  <div id="gdpr-modal" role="dialog" aria-modal="true" aria-labelledby="gdpr-title">
+    <div class="gdpr-card">
+      <div class="gdpr-header">
+        <h2 id="gdpr-title">Zásady ochrany osobních údajů</h2>
+        <button class="gdpr-close" id="gdpr-close-btn" aria-label="Zavřít">&#x2715;</button>
+      </div>
+      <div class="gdpr-body">
+
+        <h3>1. Správce osobních údajů</h3>
+        <div class="gdpr-info-box">
+          <p><strong>Lukáš Kondelík</strong></p>
+          <p>IČO: 24868027</p>
+          <p>Sídlo: Uralská 689/7, Bubeneč, 160 00 Praha 6</p>
+          <p>E-mail: <a href="mailto:lukaskondelik@nexari.cz">lukaskondelik@nexari.cz</a></p>
+          <p>Telefon: <a href="tel:+420601505713">+420 601 505 713</a></p>
+        </div>
+        <p>Správce zpracovává osobní údaje v souladu s Nařízením Evropského parlamentu a Rady (EU) 2016/679 (GDPR) a zákonem č. 110/2019 Sb., o zpracování osobních údajů.</p>
+
+        <h3>2. Jaké osobní údaje zpracováváme</h3>
+        <p>V rámci provozu webu nexari.cz zpracováváme tyto kategorie osobních údajů:</p>
+        <ul>
+          <li><strong>Identifikační údaje</strong> — jméno a příjmení</li>
+          <li><strong>Kontaktní údaje</strong> — e-mailová adresa, telefonní číslo</li>
+          <li><strong>Firemní údaje</strong> — název společnosti (pokud jsou dobrovolně sděleny)</li>
+          <li><strong>Obsah komunikace</strong> — obsah zpráv, zápisů z konzultací</li>
+          <li><strong>Technické údaje</strong> — IP adresa, typ prohlížeče (záznamy ze serveru)</li>
+        </ul>
+
+        <h3>3. Účel a právní základ zpracování</h3>
+        <ul>
+          <li>
+            <strong>Poskytnutí konzultace a nabídky služeb</strong><br>
+            Právní základ: čl. 6 odst. 1 písm. b) GDPR — zpracování nezbytné pro provedení opatření před uzavřením smlouvy na vaši žádost.
+          </li>
+          <li>
+            <strong>Odpověď na dotazy a obchodní komunikace</strong><br>
+            Právní základ: čl. 6 odst. 1 písm. b) nebo f) GDPR — plnění smlouvy, resp. oprávněný zájem správce na komunikaci s potenciálními klienty.
+          </li>
+          <li>
+            <strong>Plnění zákonných povinností</strong> (účetnictví, archivace)<br>
+            Právní základ: čl. 6 odst. 1 písm. c) GDPR.
+          </li>
+        </ul>
+
+        <h3>4. Doba uchovávání údajů</h3>
+        <ul>
+          <li>Po dobu trvání smluvního vztahu a <strong>3 roky</strong> po jeho ukončení pro obchodní účely.</li>
+          <li><strong>10 let</strong> pro účetní a daňové doklady (zákon č. 563/1991 Sb., o účetnictví).</li>
+          <li>Dotazy bez navazující spolupráce: <strong>12 měsíců</strong> od poslední komunikace.</li>
+        </ul>
+        <p>Po uplynutí stanovené doby jsou osobní údaje bezpečně smazány nebo anonymizovány.</p>
+
+        <h3>5. Příjemci a zpracovatelé osobních údajů</h3>
+        <p>Vaše osobní údaje mohou být předány těmto kategoriím příjemců:</p>
+        <ul>
+          <li><strong>Cal.com, Inc.</strong> — systém pro rezervaci konzultací (zpracovatel). Cal.com zpracovává osobní údaje v souladu s jejich Data Processing Agreement. Více informací: <a href="https://cal.com/privacy" target="_blank" rel="noopener">cal.com/privacy</a>.</li>
+          <li><strong>Poskytovatel webhostingu</strong> — za účelem technického provozu webové stránky.</li>
+        </ul>
+        <p>Vaše osobní údaje neprodáváme ani nepředáváme třetím stranám za účelem marketingu.</p>
+
+        <h3>6. Předávání osobních údajů do třetích zemí</h3>
+        <p>Cal.com, Inc. je společnost se sídlem ve Spojených státech amerických. Předávání probíhá na základě standardních smluvních doložek (SCC) schválených Evropskou komisí dle čl. 46 GDPR. Na vyžádání poskytneme bližší informace o použitých zárukách.</p>
+
+        <h3>7. Vaše práva jako subjektu údajů</h3>
+        <ul>
+          <li><strong>Právo na přístup</strong> (čl. 15 GDPR) — právo získat potvrzení, zda zpracováváme vaše údaje, a přístup k nim.</li>
+          <li><strong>Právo na opravu</strong> (čl. 16 GDPR) — právo na opravu nepřesných nebo neúplných údajů.</li>
+          <li><strong>Právo na výmaz</strong> (čl. 17 GDPR) — právo požádat o výmaz osobních údajů za podmínek stanovených zákonem.</li>
+          <li><strong>Právo na omezení zpracování</strong> (čl. 18 GDPR) — právo požadovat omezení zpracování v zákonem stanovených případech.</li>
+          <li><strong>Právo na přenositelnost</strong> (čl. 20 GDPR) — právo obdržet vaše údaje ve strukturovaném, strojově čitelném formátu.</li>
+          <li><strong>Právo vznést námitku</strong> (čl. 21 GDPR) — právo kdykoliv vznést námitku proti zpracování na základě oprávněného zájmu.</li>
+          <li><strong>Právo odvolat souhlas</strong> — pokud bylo zpracování založeno na souhlasu, máte právo jej kdykoliv odvolat, aniž by tím byla dotčena zákonnost předchozího zpracování.</li>
+        </ul>
+        <p>Pro uplatnění svých práv nás kontaktujte na <a href="mailto:lukaskondelik@nexari.cz">lukaskondelik@nexari.cz</a>. Na žádost odpovíme bez zbytečného odkladu, nejpozději do <strong>1 měsíce</strong> od jejího obdržení.</p>
+
+        <h3>8. Právo podat stížnost u dozorového úřadu</h3>
+        <p>Máte právo podat stížnost u Úřadu pro ochranu osobních údajů (ÚOOÚ):</p>
+        <div class="gdpr-info-box">
+          <p><strong>Úřad pro ochranu osobních údajů</strong></p>
+          <p>Pplk. Sochora 27, 170 00 Praha 7</p>
+          <p>Web: <a href="https://www.uoou.cz" target="_blank" rel="noopener">uoou.cz</a></p>
+          <p>E-mail: <a href="mailto:posta@uoou.cz">posta@uoou.cz</a></p>
+          <p>Telefon: +420 234 514 111</p>
+        </div>
+
+        <h3>9. Cookies a sledování</h3>
+        <p>Tato webová stránka nepoužívá analytické ani marketingové cookies třetích stran. Technické soubory nezbytné pro správnou funkci stránky (session cookies) mohou být dočasně ukládány ve vašem prohlížeči, nejsou používány ke sledování ani profilování uživatelů.</p>
+
+        <h3>10. Aktualizace těchto zásad</h3>
+        <p>Tyto zásady ochrany osobních údajů mohou být průběžně aktualizovány v souladu s platnou legislativou. Aktuální verze je vždy dostupná na tomto webu.</p>
+
+        <p class="gdpr-updated">Platné od: 10. června 2026 &nbsp;·&nbsp; Lukáš Kondelík, nexari.cz</p>
+      </div>
+    </div>
+  </div>
 
   <script>
     // ─── Sticky nav ───
@@ -1126,6 +1336,27 @@ NE<span class="logo-x">X</span>ARI
     }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
 
     fadeEls.forEach(el => observer.observe(el));
+
+    // ─── GDPR Modal ───
+    const gdprModal   = document.getElementById('gdpr-modal');
+    const gdprOpenBtn = document.getElementById('gdpr-open-btn');
+    const gdprCloseBtn = document.getElementById('gdpr-close-btn');
+
+    function openGdpr(e) {
+      e.preventDefault();
+      gdprModal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      gdprCloseBtn.focus();
+    }
+    function closeGdpr() {
+      gdprModal.classList.remove('open');
+      document.body.style.overflow = '';
+      gdprOpenBtn.focus();
+    }
+    gdprOpenBtn.addEventListener('click', openGdpr);
+    gdprCloseBtn.addEventListener('click', closeGdpr);
+    gdprModal.addEventListener('click', e => { if (e.target === gdprModal) closeGdpr(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && gdprModal.classList.contains('open')) closeGdpr(); });
 
     // ─── Smooth scroll for internal # links only ───
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
